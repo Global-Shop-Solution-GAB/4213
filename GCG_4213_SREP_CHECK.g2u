@@ -1,0 +1,35 @@
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+'Hook 11870 OE Pre Save Hook
+
+'Check to see if Sales Rep is blank
+f.Intrinsic.Control.If(v.Passed.000030,=,"")
+	f.Intrinsic.UI.Msgbox("Sales Rep needs to be filled in before saving.","Warning")
+	'Stop them from saving
+	v.Passed.777777.Set(1)
+f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4213_SREP_CHECK.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End
+
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_4213_SREP_CHECK.g2u$}$Strider$}$9/6/2016 2:13:51 PM$}$False
+${$1$}$$}$$}$0$}$11870$}$$}$9/6/2016 2:13:51 PM$}$Pre Save hook OE screen
+${$3$}$0$}$$}$0$}$-1$}$$}$12:00:00 AM$}$This program will check to see if a Sales Rep has been entered in the Order Entry screen. If no Sales Rep is entered then you will not be allowed to move forward.  
+Program.Sub.Comments.End
